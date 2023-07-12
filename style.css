@@ -1,0 +1,327 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+a {
+  text-decoration: none;
+  font-size: 25px;
+}
+.hero {
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+}
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px 100px;
+}
+
+#temp{
+  margin-left: 0;
+  font-size:48px;
+  color: #DCDCDC;
+}
+
+#icon_temp{
+  font-size:48px;
+  color: #DCDCDC;
+  margin-left: 500px;
+}
+.logo {
+  max-height: 60px;
+}
+
+nav ul {
+  margin-left: 720px;
+}
+
+nav ul li {
+  list-style: none;
+  color: #999;
+  display: inline-block;
+  padding: 10px 20px;
+}
+nav ul li a {
+  color: #fff;
+  position: relative;
+  padding: 5px 0;
+}
+nav ul li a:hover {
+  color: #999;
+}
+nav ul li a:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: #999;
+  transition: 0.3s;
+  bottom: 0;
+}
+nav ul li a:hover:after {
+  width: 100%;
+}
+.btn {
+
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 16px 40px;
+  border-radius: 500px;
+  display: inline-block;
+  font-weight: 500;
+  transition: all 0.4s ease-in-out;
+  background-size: 152% 100%;
+  background: #fd4766;
+  border: 2px solid #fd4766;
+}
+.btn:hover {
+  background: transparent;
+  border-color: #fd4766;
+  color: #fd4766;
+}
+.content {
+  margin-top: 8%;
+  margin-left: 8%;
+}
+.content .title {
+  color: #0a0a0a;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  display: inline-block;
+  margin-bottom: 20px;
+  background: linear-gradient(
+    120deg,
+    #1c99fe 20.69%,
+    #7644ff 50.19%,
+    #fd4766 79.69%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.content h1 {
+  color: #1f1f25;
+  font-size: 75px;
+  font-weight: 900;
+  line-height: 90px;
+  text-transform: inherit;
+  width: 70%;
+}
+.content h1 span {
+  color: #fd4766;
+}
+.content p {
+  width: 100%;
+  color: #202020;
+  padding: 0 10px;
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+
+
+/* Create three unequal columns that floats next to each other */
+.column {
+    float: left;
+    padding: 10px;
+  }
+  
+  /* Left and right column */
+  .column.side {
+    width: 25%;
+  }
+  
+  /* Middle column */
+  .column.middle {
+    width: 40%;
+  }
+  
+  /* Clear floats after the columns */
+  .row::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+  
+  .chart {
+    height: 500px;
+    width: 500px;
+    position: relative;
+    display: inline-block;
+    margin: -5vh 4vw;
+    color: #DCDCDC;
+    text-align: center;
+    border: 10px solid #DCDCDC;
+  border-radius: 50%;
+  }
+  .chart h1{
+    margin: 180px 70px;
+    color: #DCDCDC;
+    font-size: 200px;
+    text-align: center;
+  }
+  .chart p{
+    margin-top: -25%;
+    color: #DCDCDC;
+    font-size: 40px;
+    text-align: center;
+  }
+
+
+
+  #infor1{
+    border: 3px solid #DCDCDC;
+  }
+
+  .side h2{
+    color: #DCDCDC;
+    border-bottom: 2px solid #DCDCDC;
+    padding-left: 10px;
+  }
+
+  .side p{
+    color: #DCDCDC;
+    font-size: 20px;
+  }
+
+  td, th {
+    border: 2px solid #DCDCDC;
+    color: #DCDCDC;
+    padding: 10px 0 10px 10px;
+    font-size: 20px;
+    
+  }
+  
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  #timeid {
+    margin: 100px 140px;
+    color: #DCDCDC;
+  }
+
+  /* History */
+
+  .content_history {
+    margin: 1% 15%;
+  }
+
+  .title{
+    font-size: 40px;
+    color: #f5f5f5;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .history_table {  
+    border-collapse: collapse;  
+}  
+
+.content_history td, .content_history th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+input[type=submit] {
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 5px 20px;
+  margin: 5px;
+  border-radius: 500px;
+  display: inline-block;
+  font-weight: 500;
+  transition: all 0.4s ease-in-out;
+  background-size: 152% 100%;
+  background: #fd4766;
+  border: 2px solid #fd4766;
+}
+
+input[type=submit]:hover {
+	background: #594edc;
+	color: #fff;
+	border: 1px solid #eee;
+	border-radius: 20px;
+	text-shadow: none;
+  cursor: pointer;
+}
+
+
+
+.content_history tr:nth-child(even){background-color: #fefdfa;}
+.content_history tr:nth-child(odd){background-color: #f5f5f5;}
+
+.content_history tr:hover {background-color: #ddd;}
+
+.content_history th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  font-size: 25px;
+  background-color: #594edc;
+  color: white;
+}
+    .inline{   
+        display: inline-block;   
+        float: right;   
+        margin: 20px 0px;   
+    }   
+     
+    input, button{   
+        height: 34px;   
+    }   
+
+    .history_table td{
+      color: #403cc7;
+      font-size: 25px;
+    }
+.pagination {   
+    display: inline-block;   
+}   
+.pagination a {   
+    font-weight:bold;   
+    font-size:18px;   
+    color: #f5f5f5;   
+    float: left;   
+    padding: 8px 16px;   
+    text-decoration: none;   
+    border:1px solid #0092cc;   
+}   
+.pagination a.active {   
+        background-color: #6162df;   
+}   
+.pagination a:hover:not(.active) {   
+    background-color: #aad8f7;   
+}   
+
+
+
+#myChart{
+  width:100%;
+  max-width: 1400px; 
+  background-color: #f5f5f5;
+  display: block;
+  margin: 0 auto;
+}
+
+.time_chart{
+  font-size: 25px;
+  color: #f5f5f5;
+  text-transform: uppercase;
+  text-align: center;
+  padding-bottom: 30px;
+}

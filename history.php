@@ -12,18 +12,14 @@
   </head>
   <body style="background-color: #0892D0;">
     <div class="hero">
-      <nav>
-      <i class="fa fa-thermometer" id="icon_temp"></i>
-
-        <h2 id="temp"></h2>
+    <nav>
         <ul>
         <li><a href="./index.php">Home</a></li>
           <li><a href="./history.php">History</a></li>
-          <li><a href="#">Information</a></li>
-          <li><a href="#">Setting</a></li>
 
         </ul>
-        <a href="#" class="btn">Resume</a>
+        <i class="fa fa-thermometer" id="icon_temp"></i>
+        <h2 id="temp"></h2>
       </nav>
       <div class="content_history"> 
     <?php  
@@ -45,20 +41,53 @@
         if(isset($_POST['type_history'])){
           $time = $_POST['time'];
           if(strcmp($time, "day") == 0){
-            
+            $query = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, day(time) as day,month(time) as month, year(time) as year FROM tbl_data 
+            GROUP BY day(time), month(time), year(time) ORDER BY year(time) ASC, month(time) ASC, day(time) ASC
+            LIMIT $start_from, $per_page_record; ";
+            $query_page = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, day(time) as day,month(time) as month, year(time) as year FROM tbl_data 
+            GROUP BY day(time), month(time), year(time) ORDER BY year(time) ASC, month(time) ASC, day(time) ASC; ";                    
+          }
+          else if(strcmp($time, "month") == 0){
+            $query = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, month(time) as month, year(time) as year FROM tbl_data 
+            GROUP BY month(time), year(time) ORDER BY year(time) ASC, month(time) ASC
+            LIMIT $start_from, $per_page_record; ";
+            $query_page = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, month(time) as month, year(time) as year FROM tbl_data 
+            GROUP BY month(time), year(time) ORDER BY year(time) ASC, month(time) ASC; ";
+          }
+          else if(strcmp($time, "year") == 0){
+            $query = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, year(time) as year FROM tbl_data 
+            GROUP BY year(time)
+            LIMIT $start_from, $per_page_record; ";
+            $query_page = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, year(time) as year FROM tbl_data GROUP BY year(time); ";  
+          }
+          else{
+            $query = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, day(time) as day,month(time) as month, year(time) as year FROM tbl_data 
+            GROUP BY day(time), month(time), year(time) ORDER BY year(time) ASC, month(time) ASC, day(time) ASC
+            LIMIT $start_from, $per_page_record; ";
+            $query_page = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, day(time) as day,month(time) as month, year(time) as year FROM tbl_data 
+            GROUP BY day(time), month(time), year(time) ORDER BY year(time) ASC, month(time) ASC, day(time) ASC; ";      
           }
         }
-    
-        $query = "SELECT temp FROM tbl_data LIMIT $start_from, $per_page_record";     
-        $rs_result = mysqli_query ($con, $query);    
+        else{
+          $query = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, day(time) as day,month(time) as month, year(time) as year FROM tbl_data 
+            GROUP BY day(time), month(time), year(time) ORDER BY year(time) ASC, month(time) ASC, day(time) ASC
+            LIMIT $start_from, $per_page_record; ";
+            $query_page = "SELECT AVG(aqi) as aqi, AVG(temp) as temp, day(time) as day,month(time) as month, year(time) as year FROM tbl_data 
+            GROUP BY day(time), month(time), year(time) ORDER BY year(time) ASC, month(time) ASC, day(time) ASC; ";      
+        }
+        $rs_result_title = mysqli_query ($con, $query);
+        $rs_result_page = mysqli_query ($con, $query_page); 
+        $rs_result = mysqli_query ($con, $query); 
+        
+        
     ?>    
   
     <div class="container">   
       <br>   
       <div>   
         <h1 class="title">Historical</h1>
-        <form action="#" method="POST">
-          <label>Choose a type time</label>
+        <form action="./history.php" method="POST">
+          <label style="color: white;">Choose a type time</label>
           <select  name="time">
             <option value="day">Day</option>
             <option value="month">Month</option>
@@ -68,23 +97,87 @@
         </form>      
         <table class="history_table">   
           <thead>   
-            <tr>   
-              <th id="type_time" width="10%">Time</th>
-              <th width="10%">Air Quality Index</th>  
-              <th width="10%">Temperature</th>
-              <th width="10%">Show Chart</th>      
+            <tr>
+              <?php     
+              while ($row = mysqli_fetch_array($rs_result_title)) {    
+                    // Display each field of the records.    
+                if(isset($row["day"])){
+                  echo "<th>" . "Day". "</th>"; 
+                }
+                if(isset($row["month"])){
+                  echo "<th>" . "Month" . "</th>"; 
+                }
+                if(isset($row["year"])){
+                  echo "<th>" . "Year" . "</th>"; 
+                }
+                break;
+              };
+              ?>
+              <th>Air Quality Index</th>  
+              <th>Temperature</th>
+              <th>Show Chart</th>    
             </tr>   
           </thead>   
           <tbody>   
-    <?php     
+            <?php
+            $count = 0; 
+            while ($row = mysqli_fetch_array($rs_result_page)) {    
+              // Display each field of the records.  
+              $count++;  
+            }    
             while ($row = mysqli_fetch_array($rs_result)) {    
-                  // Display each field of the records.    
+                  // Display each field of the records.   
             ?>     
-            <tr>     
-             <td><?php echo $row["temp"]; ?></td> 
-             <td><?php echo $row["temp"]; ?></td>   
-             <?php echo "<td>" . $row["temp"] . "</td>"; ?>
-             <td><a href="">View</a></td>                                                  
+            <tr>
+            <?php       
+                if(isset($row["day"])){
+                  echo "<td>" . $row["day"] . "</td>";
+                }
+                if(isset($row["month"])){
+                  echo "<td>" . $row["month"] . "</td>";
+                }
+                if(isset($row["year"])){
+                  echo "<td>" . $row["year"] . "</td>";
+                }
+              ?>     
+             <td><?php echo $row["aqi"]; ?></td> 
+             <td><?php echo $row["temp"]; ?></td>
+              
+             <td>
+              <form action="./chart.php" method="post">
+                <input type="hidden" name="day" value="
+                <?php       
+                if(isset($row["day"])){
+                  echo $row["day"];
+                }
+                else{
+                  echo "NULL";
+                }
+                ?>
+                ">
+                <input type="hidden" name="month" value="
+                <?php       
+                if(isset($row["month"])){
+                  echo $row["month"];
+                }
+                else{
+                  echo "NULL";
+                }
+                ?>
+                ">
+                <input type="hidden" name="year" value="
+                <?php       
+                if(isset($row["year"])){
+                  echo $row["year"];
+                }
+                else{
+                  echo "NULL";
+                }
+                ?>
+                ">
+                <input type="submit" value="View" name="view_chart">
+              </form>  
+            </td>                                                  
             </tr>     
             <?php     
                 };    
@@ -94,10 +187,10 @@
   
      <div class="pagination">    
       <?php  
-        $query = "SELECT COUNT(*) FROM tbl_data";     
-        $rs_result = mysqli_query($con, $query);     
-        $row = mysqli_fetch_row($rs_result);     
-        $total_records = $row[0];     
+        // $query = "SELECT COUNT(*) FROM tbl_data";     
+        // $rs_result = mysqli_query($con, $query);     
+        // $row = mysqli_fetch_row($rs_result);     
+        $total_records = $count;     
           
     echo "</br>";     
         // Number of pages required.   
