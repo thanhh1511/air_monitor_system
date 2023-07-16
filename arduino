@@ -1,0 +1,132 @@
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2); 
+
+int temperature_sensor = A1;
+int aqi_sensor = A0;
+int temperature_val = 0;
+int aqi_val = 0;
+int aqi_limit = 20;
+int temperature_above = 40;
+int temperature_under = 8;
+
+const String host = "http://127.0.0.1";
+const String red = "Simulator Wifi";
+const String pass = "";
+
+char buf[80]; 
+int i; 
+int e=1; 
+
+void setup() {
+  Serial.begin(115200); 
+  lcd.begin(16, 2); 
+  delay(500); 
+  connectWiFi();
+}
+
+void loop() {
+  int aqi_read = analogRead(aqi_sensor);
+  aqi_val = map(aqi_read, 320, 750, 0, 500);
+  int temperature_read = analogRead(temperature_sensor);
+  temperature_val = map(temperature_read, 20, 358, -40, 125);
+  request(aqi_val, temperature_val);
+}
+
+void connectWiFi(){
+  comando("AT+RST"); 
+  delay(100); 
+  respuesta(); 
+  delay(1000); 
+  comando("AT+CWJAP_CUR=\""+red+"\",\""+pass+"\"");
+
+  delay(100); 
+  respuesta(); 
+  delay(1000); 
+  comando("AT+CWJAP_CUR?"); 
+  delay(100); 
+  respuesta(); 
+
+}
+
+void comando(String cmd){ 
+    lcd.clear();
+	lcd.home(); 
+ 	lcd.print("Cmd: "+cmd); 
+ 	Serial.println(cmd); 
+}
+
+void respuesta(){
+  while(Serial.available()==0){
+    ;
+  }
+  i = 0;
+  while(Serial.available()>0){ 
+     char x = Serial.read();
+     buf[i] = x;
+     i++;
+  }
+  lcd.setCursor(0, 1); 
+  lcd.print("Res: ");
+  lcd.print(buf); 
+  memset(buf, 0, sizeof(buf)); 
+}
+
+void connectToPage(){
+  String cmd = "AT+CIPSTART=\"TCP\",\""; 
+  cmd += String(host);
+  cmd += "\",80";       
+  comando(cmd);       
+  delay(100);         
+  respuesta();       
+  delay(1000);
+  bool p = strstr(buf,"ERROR");
+  if(p){
+  	e=1;
+  }else{
+  	e=0;
+  }
+}
+
+void request(int aqi, int temp){
+  while(e==1){
+	connectToPage();
+    if(e==1){
+      	lcd.home();
+    	lcd.print("Connection Error");
+        lcd.setCursor(0, 1); 
+        lcd.print("Reconnecting...");
+    }
+  }
+  String getStr = "GET ";
+  //getStr += "/get";
+  String stringAqi = String(aqi);
+  String stringTemp = String(temp);
+  getStr += "/insert_temp.php?aqi=" + stringAqi + "&temp=" + stringTemp;
+  //getStr += "/bytes/5";
+  getStr += " HTTP/1.1\r\n";
+  getStr += "Host: " + host + "\r\n"; 
+  //getStr += "Connection: close";
+  getStr += "\r\n\r\n";
+  if(sendGetCmd(getStr)=="error"){
+  	e=1;
+  }
+}
+
+String sendGetCmd(String getStr){
+  String cmd = "AT+CIPSEND=";     
+  cmd += String(getStr.length()); 
+  comando(cmd);                 
+  delay(100);
+  if(Serial.find(">")){
+  	Serial.print(getStr);
+  	delay(10);                   
+  	respuesta();			
+  	delay(500);           
+  }else{
+    Serial.println("AT+CIPCLOSE");	   
+    lcd.print("CIPSEND ERROR"); 
+    return "error";			
+  }
+}
+
